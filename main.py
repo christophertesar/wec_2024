@@ -112,27 +112,42 @@ class App(customtkinter.CTk):
             return
         if not os.path.exists(default_save_path):
             os.mkdir(default_save_path)
+
+        # Open the custom save dialog to ask for a file name
+        save_dialog = SaveDialog(self, "Save File As")
+        user_defined_name = save_dialog.get_user_input()
+        if not user_defined_name:
+            messagebox.showinfo("Save File", "File save cancelled.")
+            return
+
+        # Define save paths for text, recordings, and photos
         text_save_path = os.path.join(default_save_path, "text")
         if not os.path.exists(text_save_path):
             os.mkdir(text_save_path)
 
-
-
-        # Recording
-        if file_type == "audio":
+        # Handling recordings
+        if file_type == 0:
             recording_save_path = os.path.join(default_save_path, "recordings")
             if not os.path.exists(recording_save_path):
                 os.mkdir(recording_save_path)
-            recording_path = os.path.join(recording_save_path, os.path.basename(file))
-            text_path = os.path.join(text_save_path, os.path.splitext(os.path.basename(recording_path))[0] + ".txt")
+
+            # Use the user-defined name for saving the recording and text file
+            recording_path = os.path.join(recording_save_path, user_defined_name + ".wav")
+            text_path = os.path.join(text_save_path, user_defined_name + ".txt")
+
             shutil.copyfile(file, recording_path)
             transcribe_audio_to_text(recording_path, text_path)
             self.convert_text_to_doc(text_path, recording_path)
-        elif file_type == "image":
+
+        # Handling photos
+        else:
             photo_save_path = os.path.join(default_save_path, "photos")
             if not os.path.exists(photo_save_path):
                 os.mkdir(photo_save_path)
-            shutil.copyfile(file, photo_save_path)
+
+            # Use the user-defined name for saving the photo
+            photo_path = os.path.join(photo_save_path, user_defined_name + os.path.splitext(file)[-1])
+            shutil.copyfile(file, photo_path)
 
     def convert_text_to_doc(self, text_path, recording_path):
         document = Document()
@@ -163,6 +178,61 @@ class App(customtkinter.CTk):
     def change_scaling_event(self, new_scaling: str):
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
         customtkinter.set_widget_scaling(new_scaling_float)
+
+class SaveDialog(customtkinter.CTkToplevel):
+    def __init__(self, parent, title="Save As"):
+        super().__init__(parent)
+
+        self.title(title)
+
+        # Entry for file name with adjusted width and height
+        self.entry = customtkinter.CTkEntry(self, width=400, height=60,
+                                            font=("Arial", 18),  # Adjusted font size for better readability
+                                            placeholder_text="Enter file name here")
+        self.entry.pack(pady=20)  # Adjusted padding for spacing
+
+        # Confirm button with adjusted size
+        self.confirm_button = customtkinter.CTkButton(self, text="Save",
+                                                      width=200, height=60,  # Adjusted size
+                                                      font=("Arial", 18),  # Adjusted font size
+                                                      command=self.on_confirm)
+        self.confirm_button.pack(pady=10)
+
+        # Set the size of the popup window after adding all widgets
+        self.geometry("800x400")  # Adjusted size to make the window larger
+
+        # Force the window to update its size
+        self.update()
+
+        # Center the dialog relative to the parent window
+        self.center_window()
+
+        # Make dialog modal and keep on top
+        self.transient(parent)
+        self.grab_set()
+
+        # Keep this window above all others
+        self.attributes('-topmost', True)
+
+        # Variable to store the user's input
+        self.user_input = None
+        parent.wait_window(self)
+
+    def on_confirm(self):
+        self.user_input = self.entry.get()
+        self.destroy()
+
+    def get_user_input(self):
+        return self.user_input
+
+    def center_window(self):
+        width = 800  # Desired width
+        height = 400  # Desired height
+        x = (self.winfo_screenwidth() // 2) - (width // 2)
+        y = (self.winfo_screenheight() // 2) - (height // 2)
+        self.geometry(f'{width}x{height}+{x}+{y}')  # Set the size and position
+
+
 
 class RecordingWindow(customtkinter.CTkToplevel):
     def __init__(self, *args, **kwargs):
