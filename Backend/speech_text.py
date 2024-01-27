@@ -3,7 +3,7 @@ from gtts import gTTS
 import os
 
 # Replace with your API key
-aai.settings.api_key = "INSERTKEY"
+aai.settings.api_key = "API_KEY"
 
 def transcribe_audio_to_text(audio_file_url, output_text_file):
     # Initialize the transcriber
@@ -32,19 +32,19 @@ def convert_text_to_speech(text, output_audio_file):
     print("Text-to-speech saved as:", output_audio_file)
 
 # URL of the file to transcribe
-audio_file_url = 'C:/Users/manra/OneDrive/Documents/Sound Recordings/Recording.m4a'
+#audio_file_url = 'C:/Users/manra/OneDrive/Documents/Sound Recordings/Recording.m4a'
 
 # Define the path and name for the output text file
-text_output_path = 'C:/Users/manra/OneDrive/Desktop/voice_notes/Recording_transcription.txt'
+#text_output_path = 'C:/Users/manra/OneDrive/Desktop/voice_notes/Recording_transcription.txt'
 
 # Define the path and name for the output audio file
-audio_output_path = 'C:/Users/manra/OneDrive/Desktop/voice_notes/Recording_transcription.mp3'
+#audio_output_path = 'C:/Users/manra/OneDrive/Desktop/voice_notes/Recording_transcription.mp3'
 
 # Transcribe the audio to text
-transcribed_text = transcribe_audio_to_text(audio_file_url, text_output_path)
+#transcribed_text = transcribe_audio_to_text(audio_file_url, text_output_path)
 
 # Convert the text to speech
-convert_text_to_speech(transcribed_text, audio_output_path)
+#convert_text_to_speech(transcribed_text, audio_output_path)
 
 # Optionally, play the generated speech
-os.system(f'start {audio_output_path}')
+#os.system(f'start {audio_output_path}')

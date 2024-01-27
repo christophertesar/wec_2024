@@ -1,16 +1,15 @@
 import os
 import shutil
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 import customtkinter
 import sounddevice as sd
 from scipy.io.wavfile import write
 from spire.doc import *
 from spire.doc.common import *
 
-import wavio as wv
-import threading
-from multiprocessing import Process
 from Backend.speech_text import transcribe_audio_to_text
+from Backend.image_to_text import image_to_text
+from Backend.summary import gen_summary
 
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -81,7 +80,6 @@ class App(customtkinter.CTk):
         camera_button = customtkinter.CTkButton(self.button_frame, text="Take Photo",
                                                 height=100, width=200, font=("Arial", 36))
 
-        self.button_frame.pack(side="top", fill="x")
         record_button.pack(side="left", padx=(10, 10), pady=10, fill="both")
         upload_recording_button.pack(side="left", padx=(0, 10), pady=10, fill="both")
         camera_button.pack(side="left", padx=(0, 10), pady=10, fill="both")
@@ -103,6 +101,7 @@ class App(customtkinter.CTk):
             self.record_dialog.focus()  # if window exists focus it
 
     def change_context(self, context):
+        self.button_frame.pack(side="top", fill="x")
         self.update()
         self.notes.clear()
         for note_button in self.note_buttons:
@@ -123,56 +122,64 @@ class App(customtkinter.CTk):
             self.note_buttons.append(note_button)
 
     def save_file(self, file_type):
+        # Prepare """database"""
+        if not os.path.exists(default_save_path):
+            os.mkdir(default_save_path)
+        work_save_path = os.path.join(default_save_path, "work")
+        if not os.path.exists(work_save_path):
+            os.mkdir(work_save_path)
+        school_save_path = os.path.join(default_save_path, "school")
+        if not os.path.exists(school_save_path):
+            os.mkdir(school_save_path)
+        personal_save_path = os.path.join(default_save_path, "personal")
+        if not os.path.exists(personal_save_path):
+            os.mkdir(personal_save_path)
+
+        # Get file to be saved
         file = filedialog.askopenfilename()
         if not os.path.exists(file):
             return
-        if not os.path.exists(default_save_path):
-            os.mkdir(default_save_path)
 
         # Open the custom save dialog to ask for a file name
-        save_dialog = SaveDialog(self, "Save File As")
+        save_dialog = SaveDialog(self, "New Note")
         user_defined_name = save_dialog.get_user_input()
         if not user_defined_name:
             messagebox.showinfo("Save File", "File save cancelled.")
             return
 
-        # Define save paths for text, recordings, and photos
-        text_save_path = os.path.join(default_save_path, "text")
-        if not os.path.exists(text_save_path):
-            os.mkdir(text_save_path)
-
-        # Handling recordings
-        if file_type == 0:
-            recording_save_path = os.path.join(default_save_path, "recordings")
-            if not os.path.exists(recording_save_path):
-                os.mkdir(recording_save_path)
-
-            # Use the user-defined name for saving the recording and text file
-            recording_path = os.path.join(recording_save_path, user_defined_name + ".wav")
-            text_path = os.path.join(text_save_path, user_defined_name + ".txt")
-
-            shutil.copyfile(file, recording_path)
-            transcribe_audio_to_text(recording_path, text_path)
-            self.convert_text_to_doc(text_path, recording_path)
-
-        # Handling photos
+        # Save added file
+        added_note = ""
+        if self.context == "work":
+            added_note = os.path.join(work_save_path, user_defined_name)
+        elif self.context == "school":
+            added_note = os.path.join(school_save_path, user_defined_name)
+        elif self.context == "personal":
+            added_note = os.path.join(personal_save_path, user_defined_name)
         else:
-            photo_save_path = os.path.join(default_save_path, "photos")
-            if not os.path.exists(photo_save_path):
-                os.mkdir(photo_save_path)
+            return
+        os.mkdir(added_note)
+        added_file = os.path.join(added_note, os.path.basename(file))
+        added_file_no_ext = os.path.splitext(os.path.basename(file))[0]
+        shutil.copyfile(file, added_file)
 
-            # Use the user-defined name for saving the photo
-            photo_path = os.path.join(photo_save_path, user_defined_name + os.path.splitext(file)[-1])
-            shutil.copyfile(file, photo_path)
+        transcribed_file = ""
+        document_file = os.path.join(added_note, added_file_no_ext + ".docx")
+        if file_type == "audio":
+            transcribed_file = os.path.join(added_note, added_file_no_ext + ".txt")
+            transcribe_audio_to_text(added_file, transcribed_file)
+            summary_file = os.path.join(added_note, added_file_no_ext + "_summary.txt")
+            gen_summary(transcribed_file, summary_file)
+        elif file_type == "image":
+            transcribed_file = os.path.join(added_note, added_file_no_ext + "_ocr.txt")
+            image_to_text(added_file, transcribed_file)
+        self.convert_text_to_doc(transcribed_file, document_file)
 
-    def convert_text_to_doc(self, text_path, recording_path):
+    def convert_text_to_doc(self, text_path, document_path):
         document = Document()
         document.LoadFromFile(text_path)
-        base = os.path.splitext(os.path.basename(recording_path))[0] + ".docx"
-        document.SaveToFile(base, FileFormat.Docx)
-        print(base)
+        document.SaveToFile(document_path, FileFormat.Docx)
         document.Close()
-        self.format_doc(base)
+        self.format_doc(document_path)
 
     def format_doc(self, doc_path):
         document = Document()
