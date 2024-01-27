@@ -1,16 +1,21 @@
-# WEC 2024 Voice Note Application
+# WEC 2024 - REVELOPER DOCUMENTATION
 
 ## Description
 
-WEC 2024 is an intuitive voice note application designed to enhance productivity and accessibility. With features like voice recording, speech-to-text transcription, and easy note management, WEC 2024 is ideal for users looking to efficiently capture and organize their thoughts and meetings.
+Ez-Note is an intuitive voice note application designed to enhance productivity and accessibility. With features such as speech-to-text transcription, image to text transcription, and text to speech, Ez-Note is ideal for users looking to efficiently capture and organize their thoughts, schoolwork, and meetings.
+
+All frontend content is located in the main.py. The api calls  are located in the Backend folder, and these are called by buttons on the frontent. The Database is locally stored int he project folder
 
 ## Features
 
-- **Voice Recording**: Record voice notes directly within the application.
 - **Speech-to-Text**: Transcribe recorded audio to text using advanced speech recognition technology.
+- **Image-to-Text**: Transcribe images of writing to text using advanced OCR.
+- **Text-to-Speech**: Use Text-to-Speech to get your notes dicated to you.
 - **File Management**: Save, organize, and retrieve voice notes and transcriptions with ease.
 - **Custom File Naming**: Rename your files upon saving for better organization.
 - **Dark Mode**: Built-in dark mode for reduced eye strain in low-light conditions.
+- **UI Scaling**: Built-in UI Scaling for those with impaired vision.
+
 
 ## Getting Started
 
@@ -24,7 +29,7 @@ WEC 2024 is an intuitive voice note application designed to enhance productivity
 1. Clone the repository to your local machine:
 
     ```sh
-    git clone https://your-repository-url-here.git
+    git clone https://github.com/christophertesar/wec_2024/
     ```
 
 2. Navigate to the project directory:
