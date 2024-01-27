@@ -3,3 +3,7 @@ pytesseract
 Pillow
 gTTS
 playsound
+nltk
+numpy
+networkx
+scipy
