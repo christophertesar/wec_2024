@@ -47,22 +47,24 @@ class App(customtkinter.CTk):
 
         self.appearance_mode_options = customtkinter.CTkOptionMenu(self.sidebar_frame,
                                                                    values=["Light", "Dark", "System"],
+                                                                   font=("Arial", 36),
                                                                    command=self.change_appearance_mode_event)
 
         self.scaling_label = customtkinter.CTkLabel(self.sidebar_frame, text="UI Scaling:", anchor="w")
 
         self.scaling_options = customtkinter.CTkOptionMenu(self.sidebar_frame,
                                                            values=["80%", "100%", "120%", "140%", "160%"],
+                                                           font=("Arial", 36),
                                                            command=self.change_scaling_event)
 
         self.logo_label.pack(side="top", padx=20, pady=(20, 10))
-        self.work_button.pack(side="top", padx=20, pady=(0, 10))
-        self.school_button.pack(side="top", padx=20, pady=(0, 10))
-        self.personal_button.pack(side="top", padx=20, pady=(0, 10))
-        self.scaling_options.pack(side="bottom", padx=0, pady=(0, 20))
-        self.scaling_label.pack(side="bottom", padx=20, pady=0)
-        self.appearance_mode_options.pack(side="bottom", padx=20, pady=(0, 20))
-        self.appearance_mode_label.pack(side="bottom", padx=20, pady=0)
+        self.work_button.pack(side="top", padx=20, pady=(0, 10), fill="x")
+        self.school_button.pack(side="top", padx=20, pady=(0, 10), fill="x")
+        self.personal_button.pack(side="top", padx=20, pady=(0, 10), fill="x")
+        self.scaling_options.pack(side="bottom", padx=20, pady=(0, 20), fill="x")
+        #self.scaling_label.pack(side="bottom", padx=20, pady=0)
+        self.appearance_mode_options.pack(side="bottom", padx=20, pady=(0, 20), fill="x")
+        #self.appearance_mode_label.pack(side="bottom", padx=20, pady=0)
 
         # Main Frame
         self.main_frame = customtkinter.CTkFrame(self, height=self.height - 30, width=self.width, corner_radius=0)
@@ -80,20 +82,17 @@ class App(customtkinter.CTk):
                                                 height=100, width=200, font=("Arial", 36))
 
         self.button_frame.pack(side="top", fill="x")
-        record_button.pack(side="left", padx=(20, 10), fill="both")
-        upload_recording_button.pack(side="left", padx=(10, 20), fill="both")
-        camera_button.pack(side="left", padx=(20, 10), fill="both")
-        upload_photo_button.pack(side="left", padx=(10, 20), fill="both")
-
-        # Main frame display
-        for directory in default_save_path:
-            if os.path.isdir(directory):
-                pass
+        record_button.pack(side="left", padx=(10, 10), pady=10, fill="both")
+        upload_recording_button.pack(side="left", padx=(0, 10), pady=10, fill="both")
+        camera_button.pack(side="left", padx=(0, 10), pady=10, fill="both")
+        upload_photo_button.pack(side="left", padx=(0, 20), pady=10, fill="both")
 
         # set default values
         self.appearance_mode_options.set("Dark")
         self.scaling_options.set("120%")
         self.context = None
+        self.notes = []
+        self.note_buttons = []
         self.record_dialog = ""
 
     def open_recording_dialog(self):
@@ -104,7 +103,24 @@ class App(customtkinter.CTk):
             self.record_dialog.focus()  # if window exists focus it
 
     def change_context(self, context):
+        self.update()
+        self.notes.clear()
+        for note_button in self.note_buttons:
+            note_button.destroy()
+        self.note_buttons.clear()
         self.context = context
+        for directory in os.listdir(default_save_path):
+            if not os.path.isdir(os.path.join(default_save_path, directory)):
+                continue
+            if os.path.basename(directory) == self.context:
+                for note in os.listdir(os.path.join(default_save_path, directory)):
+                    if os.path.isdir(os.path.join(default_save_path, directory, note)):
+                        self.notes.append(note)
+        for note in self.notes:
+            note_button = customtkinter.CTkButton(self.main_frame, text=os.path.basename(note),
+                                    height=100, width=200, font=("Arial", 36))
+            note_button.pack(side="left", padx=20, pady=20)
+            self.note_buttons.append(note_button)
 
     def save_file(self, file_type):
         file = filedialog.askopenfilename()
@@ -139,7 +155,9 @@ class App(customtkinter.CTk):
         document.LoadFromFile(text_path)
         base = os.path.splitext(os.path.basename(recording_path))[0] + ".docx"
         document.SaveToFile(base, FileFormat.Docx)
+        print(base)
         document.Close()
+        self.format_doc(base)
 
     def format_doc(self, doc_path):
         document = Document()
@@ -148,7 +166,7 @@ class App(customtkinter.CTk):
         style.Name = 'NewStyle'
         style.CharacterFormat.TextColor = Color.get_Black()
         style.CharacterFormat.FontName = 'Arial'
-        style.CharacterFormat.FontSize = 20
+        style.CharacterFormat.FontSize = 32
         document.Styles.Add(style)
 
         for section in document.Sections:
@@ -156,6 +174,7 @@ class App(customtkinter.CTk):
                 paragraph.ApplyStyle(style.Name)
         document.SaveToFile(doc_path, FileFormat.Docx)
         document.Close()
+        print("Done formatting")
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
         customtkinter.set_appearance_mode(new_appearance_mode)
