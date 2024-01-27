@@ -12,11 +12,13 @@ class App(customtkinter.CTk):
 
         # configure window
         self.title("WEC 2024")
-        self.geometry(f"{1920}x{1080}")
+        self.update()
+        width, height = self.winfo_screenwidth(), self.winfo_screenheight()
+        self.geometry(f'{width}x{height}+0+0')
 
 
         # create sidebar frame with widgets
-        self.sidebar_frame = customtkinter.CTkFrame(self, height=300, width=100, corner_radius=0)
+        self.sidebar_frame = customtkinter.CTkFrame(self, height=self.winfo_height(), width=100, corner_radius=0)
         self.sidebar_frame.grid(row=0, column=0, sticky="nsew")
         self.sidebar_frame.grid_rowconfigure(4, weight=1)
         self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="WEC 2024", font=customtkinter.CTkFont(size=20, weight="bold"))
@@ -33,8 +35,8 @@ class App(customtkinter.CTk):
         self.scaling_optionemenu.grid(row=8, column=0, padx=0, pady=(0, 20))
 
         # create scrollable frame
-        self.frame = customtkinter.CTkFrame(self, height=500, width=800, corner_radius=0)
-        self.notes = customtkinter.CTkFrame(self, height=500, width=800, corner_radius=0)  #Frame for transcription and image conversion
+        self.frame = customtkinter.CTkFrame(self, height=self.winfo_height(), width=self.winfo_height()-120, corner_radius=0)
+        self.notes = customtkinter.CTkFrame(self, height=self.winfo_height(), width=self.winfo_height()-120, corner_radius=0)  #Frame for transcription and image conversion
         # self.scrollable_frame = customtkinter.CTkScrollableFrame(self, height=500, width=800, corner_radius=0)
         self.frame.grid(row=0, column=1, padx=(20, 0), pady=0, sticky="nsew")
         button = customtkinter.CTkButton(self.frame, text="Notes", command=self.button_function, height=300, width=500, font=("Arial", 36))
