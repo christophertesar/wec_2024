@@ -1,4 +1,6 @@
-# WEC 2024 - REVELOPER DOCUMENTATION
+# WEC 2024 - DEVELOPER DOCUMENTATION
+
+![Ez-Note logo](https://github.com/christophertesar/wec_2024/assets/74273268/bdabbf0f-0039-4608-a079-6f3c28dc2c43)
 
 ## Description
 
@@ -43,6 +45,9 @@ All frontend content is located in the main.py. The api calls  are located in th
     ```sh
     pip install -r requirements.txt
     ```
+
+4. Download tesseract-ocr-w64-setup-5.3.3.20231005.exe from the main project folder
+
 
 ### Running the Application
 
