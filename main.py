@@ -2,7 +2,7 @@ import tkinter
 import tkinter.messagebox
 import customtkinter
 
-customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
+customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
 
@@ -14,8 +14,9 @@ class App(customtkinter.CTk):
         self.title("WEC 2024")
         self.geometry(f"{1920}x{1080}")
 
+
         # create sidebar frame with widgets
-        self.sidebar_frame = customtkinter.CTkFrame(self, height=500, width=100, corner_radius=0)
+        self.sidebar_frame = customtkinter.CTkFrame(self, height=300, width=100, corner_radius=0)
         self.sidebar_frame.grid(row=0, column=0, sticky="nsew")
         self.sidebar_frame.grid_rowconfigure(4, weight=1)
         self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="WEC 2024", font=customtkinter.CTkFont(size=20, weight="bold"))
@@ -32,13 +33,20 @@ class App(customtkinter.CTk):
         self.scaling_optionemenu.grid(row=8, column=0, padx=0, pady=(0, 20))
 
         # create scrollable frame
-        self.scrollable_frame = customtkinter.CTkScrollableFrame(self, height=800, width=800, corner_radius=0)
-        self.scrollable_frame.grid(row=0, column=1, padx=(20, 0), pady=0, sticky="nsew")
+        self.frame = customtkinter.CTkFrame(self, height=500, width=800, corner_radius=0)
+        self.notes = customtkinter.CTkFrame(self, height=500, width=800, corner_radius=0)  #Frame for transcription and image conversion
+        # self.scrollable_frame = customtkinter.CTkScrollableFrame(self, height=500, width=800, corner_radius=0)
+        self.frame.grid(row=0, column=1, padx=(20, 0), pady=0, sticky="nsew")
+        button = customtkinter.CTkButton(self.frame, text="Notes", command=self.button_function, height=300, width=500, font=("Arial", 36))
+        button.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
 
 
         # set default values
-        self.appearance_mode_optionemenu.set("System")
+        self.appearance_mode_optionemenu.set("Dark")
         self.scaling_optionemenu.set("100%")
+
+    def button_function(self):
+        print("button pressed")
 
     def open_input_dialog_event(self):
         dialog = customtkinter.CTkInputDialog(text="Type in a number:", title="CTkInputDialog")
@@ -57,4 +65,5 @@ class App(customtkinter.CTk):
 
 if __name__ == "__main__":
     app = App()
+    app.attributes('-fullscreen', True)
     app.mainloop()
