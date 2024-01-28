@@ -14,10 +14,17 @@ from Backend.speech_text import convert_text_to_speech
 from Backend.image_to_text import image_to_text
 from Backend.summary import gen_summary
 
+# Set default to dark mode blue
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
+# Default save path for all files
 default_save_path = "./database/"
+
+'''
+Custom Tkinter main app window
+'''
+
 
 class App(customtkinter.CTk):
     def __init__(self):
@@ -26,10 +33,11 @@ class App(customtkinter.CTk):
         # Window Config
         self.title("Ez-Note")
         self.update()
+        # Set window size to match screen size
         self.width, self.height = self.winfo_screenwidth(), self.winfo_screenheight()
         self.geometry(f'{self.width}x{self.height}+0+0')
 
-        # Sidebar frame
+        # Define sidebar frame buttons and labels
         self.sidebar_frame = customtkinter.CTkFrame(self, height=self.height, width=100, corner_radius=0)
         self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="WEC 2024",
                                                  font=customtkinter.CTkFont(size=20, weight="bold"))
@@ -38,13 +46,14 @@ class App(customtkinter.CTk):
         self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="WEC 2024",
                                                  font=customtkinter.CTkFont(size=20, weight="bold"))
         self.work_button = customtkinter.CTkButton(self.sidebar_frame, text="Work",
-                                                          height=100, font=("Arial", 36), command= lambda: self.change_context("work"))
+                                                   height=100, font=("Arial", 36),
+                                                   command=lambda: self.change_context("work"))
         self.school_button = customtkinter.CTkButton(self.sidebar_frame, text="School",
-                                                   height=100, font=("Arial", 36),
-                                                   command=lambda: self.change_context("school"))
+                                                     height=100, font=("Arial", 36),
+                                                     command=lambda: self.change_context("school"))
         self.personal_button = customtkinter.CTkButton(self.sidebar_frame, text="Personal",
-                                                   height=100, font=("Arial", 36),
-                                                   command=lambda: self.change_context("personal"))
+                                                       height=100, font=("Arial", 36),
+                                                       command=lambda: self.change_context("personal"))
         self.appearance_mode_label = customtkinter.CTkLabel(self.sidebar_frame, text="Appearance Mode:", anchor="w")
 
         self.appearance_mode_options = customtkinter.CTkOptionMenu(self.sidebar_frame,
@@ -59,17 +68,19 @@ class App(customtkinter.CTk):
                                                            font=("Arial", 36),
                                                            command=self.change_scaling_event)
 
+        # Pack sidebar frame buttons and labels
         self.logo_label.pack(side="top", padx=20, pady=(20, 10))
         self.work_button.pack(side="top", padx=20, pady=(0, 10), fill="x")
         self.school_button.pack(side="top", padx=20, pady=(0, 10), fill="x")
         self.personal_button.pack(side="top", padx=20, pady=(0, 10), fill="x")
         self.scaling_options.pack(side="bottom", padx=20, pady=(0, 20), fill="x")
-        #self.scaling_label.pack(side="bottom", padx=20, pady=0)
+        # self.scaling_label.pack(side="bottom", padx=20, pady=0)
         self.appearance_mode_options.pack(side="bottom", padx=20, pady=(0, 20), fill="x")
-        #self.appearance_mode_label.pack(side="bottom", padx=20, pady=0)
+        # self.appearance_mode_label.pack(side="bottom", padx=20, pady=0)
 
         # Main Frame
-        self.main_frame = customtkinter.CTkScrollableFrame(self, height=self.height - 30, width=self.width, corner_radius=0)
+        self.main_frame = customtkinter.CTkScrollableFrame(self, height=self.height - 30, width=self.width,
+                                                           corner_radius=0)
         self.main_frame.pack(side="right", fill="both", expand=True, padx=(20, 0), pady=0)
 
         # Images
@@ -79,24 +90,23 @@ class App(customtkinter.CTk):
 
         # Main Frame Buttons
         self.button_frame = customtkinter.CTkFrame(self.main_frame, height=100, width=self.width - 120, corner_radius=0)
-        upload_recording_button = customtkinter.CTkButton(self.button_frame, text="Process Speech",
-                                                          height=100, width=200, font=("Arial", 36),
-                                                          command= lambda: self.save_file("audio"), image=process_photo)
-        record_button = customtkinter.CTkButton(self.button_frame, text="Upload File",
-                                                height=100, width=200, font=("Arial", 36),
-                                                command= lambda: self.save_file("other"), image=download_photo)
-        upload_photo_button = customtkinter.CTkButton(self.button_frame, text="Transcribe Speech",
-                                                      height=100, width=200, font=("Arial", 36),
-                                                      command= lambda: self.save_file("image"), image=transcribe_photo)
-        # camera_button = customtkinter.CTkButton(self.button_frame, text="Take Photo",
-        #                                         height=100, width=200, font=("Arial", 36))
+        upload_file_button = customtkinter.CTkButton(self.button_frame, text="Upload File",
+                                                     height=100, width=200, font=("Arial", 36),
+                                                     command=lambda: self.save_file("other"), image=download_photo)
+        process_speech_button = customtkinter.CTkButton(self.button_frame, text="Process Speech",
+                                                        height=100, width=200, font=("Arial", 36),
+                                                        command=lambda: self.save_file("audio"), image=process_photo)
+        transcribe_speech_button = customtkinter.CTkButton(self.button_frame, text="Transcribe Speech",
+                                                           height=100, width=200, font=("Arial", 36),
+                                                           command=lambda: self.save_file("image"),
+                                                           image=transcribe_photo)
 
-        record_button.pack(side="left", padx=(10, 10), pady=10, fill="both")
-        upload_recording_button.pack(side="left", padx=(0, 10), pady=10, fill="both")
-        # camera_button.pack(side="left", padx=(0, 10), pady=10, fill="both")
-        upload_photo_button.pack(side="left", padx=(0, 20), pady=10, fill="both")
+        # Pack Main Frame buttons
+        upload_file_button.pack(side="left", padx=(10, 10), pady=10, fill="both")
+        process_speech_button.pack(side="left", padx=(0, 10), pady=10, fill="both")
+        transcribe_speech_button.pack(side="left", padx=(0, 20), pady=10, fill="both")
 
-        # set default values
+        # Set default values
         self.appearance_mode_options.set("Dark")
         self.scaling_options.set("120%")
         self.context = None
@@ -104,21 +114,21 @@ class App(customtkinter.CTk):
         self.note_buttons = []
         self.record_dialog = ""
 
-    def open_recording_dialog(self):
-        if self.record_dialog is None or not self.record_dialog.winfo_exists():
-            self.record_dialog = RecordingWindow(self)  # create window if its None or destroyed
-            self.record_dialog.focus()
-        else:
-            self.record_dialog.focus()  # if window exists focus it
+    '''
+    Changes the view context between Work, School, and Personal
+    '''
 
     def change_context(self, context):
+        # Clear view
         self.button_frame.pack(side="top", fill="x")
         self.update()
         self.notes.clear()
         for note_button in self.note_buttons:
             note_button.destroy()
         self.note_buttons.clear()
+        # Set new context
         self.context = context
+        # Find notes
         for directory in os.listdir(default_save_path):
             if not os.path.isdir(os.path.join(default_save_path, directory)):
                 continue
@@ -127,16 +137,27 @@ class App(customtkinter.CTk):
                     note_path = os.path.join(default_save_path, directory, note)
                     if os.path.isdir(os.path.join(default_save_path, directory, note)):
                         self.notes.append(note_path)
+        # Create buttons for each note
         for note in self.notes:
             note_button = customtkinter.CTkButton(self.main_frame, text=os.path.basename(note),
-                                    height=100, width=200, font=("Arial", 36), command=lambda: self.open_note(note))
+                                                  height=100, width=200, font=("Arial", 36),
+                                                  command=lambda: self.open_note(note))
             note_button.pack(side="left", padx=20, pady=20, anchor="nw")
             self.note_buttons.append(note_button)
 
+    '''
+    Opens note in file explorer; future implementations would use a custom accessibility-oriented file browser
+    '''
+
     def open_note(self, note):
         os.startfile(note)
+
+    '''
+    Saves files and calls backend functions to do processing when needed
+    '''
+
     def save_file(self, file_type):
-        # Prepare """database"""
+        # Prepare database
         if not os.path.exists(default_save_path):
             os.mkdir(default_save_path)
         work_save_path = os.path.join(default_save_path, "work")
@@ -201,12 +222,19 @@ class App(customtkinter.CTk):
             pass
         self.change_context(self.context)
 
+    '''
+    Converts text to accessibility improved word document
+    '''
+
     def convert_text_to_doc(self, text_path, document_path):
         document = Document()
         document.LoadFromFile(text_path)
         document.SaveToFile(document_path, FileFormat.Docx)
         document.Close()
         self.format_doc(document_path)
+
+    '''
+    Formats accessibility improved word document'''
 
     def format_doc(self, doc_path):
         document = Document()
@@ -225,12 +253,26 @@ class App(customtkinter.CTk):
         document.Close()
         print("Done formatting")
 
+    '''
+    Sets appearance (dark/light/system)
+    '''
+
     def change_appearance_mode_event(self, new_appearance_mode: str):
         customtkinter.set_appearance_mode(new_appearance_mode)
+
+    '''
+    Sets UI scale
+    '''
 
     def change_scaling_event(self, new_scaling: str):
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
         customtkinter.set_widget_scaling(new_scaling_float)
+
+
+'''
+Dialog window for naming a note
+'''
+
 
 class SaveDialog(customtkinter.CTkToplevel):
     def __init__(self, parent, title="Save As"):
@@ -271,13 +313,22 @@ class SaveDialog(customtkinter.CTkToplevel):
         self.user_input = None
         parent.wait_window(self)
 
+    '''
+    Confirm button
+    '''
     def on_confirm(self):
         self.user_input = self.entry.get()
         self.destroy()
 
+    '''
+    Get user input
+    '''
     def get_user_input(self):
         return self.user_input
 
+    '''
+    Format window
+    '''
     def center_window(self):
         width = 800  # Desired width
         height = 400  # Desired height
@@ -286,15 +337,14 @@ class SaveDialog(customtkinter.CTkToplevel):
         self.geometry(f'{width}x{height}+{x}+{y}')  # Set the size and position
 
 
-
 class RecordingWindow(customtkinter.CTkToplevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.geometry("400x300")
 
         self.button = customtkinter.CTkButton(self, text="Stop Recording",
-                                                height=100, font=("Arial", 36),
-                                                command=self.stop_recording)
+                                              height=100, font=("Arial", 36),
+                                              command=self.stop_recording)
         self.button.place(relx=0.5)
         self.after(500, self.record_audio)
         # self.record_audio()
@@ -308,13 +358,9 @@ class RecordingWindow(customtkinter.CTkToplevel):
         # wv.write("recording1.wav", recording, freq, sampwidth=2)
         # Record audio for the given number of seconds
 
-
     def stop_recording(self):
         sd.stop()
 
-
-def get_timestamp():
-    pass
 
 if __name__ == "__main__":
     app = App()
