@@ -69,7 +69,7 @@ class App(customtkinter.CTk):
         #self.appearance_mode_label.pack(side="bottom", padx=20, pady=0)
 
         # Main Frame
-        self.main_frame = customtkinter.CTkFrame(self, height=self.height - 30, width=self.width, corner_radius=0)
+        self.main_frame = customtkinter.CTkScrollableFrame(self, height=self.height - 30, width=self.width, corner_radius=0)
         self.main_frame.pack(side="right", fill="both", expand=True, padx=(20, 0), pady=0)
 
         # Images
@@ -124,14 +124,17 @@ class App(customtkinter.CTk):
                 continue
             if os.path.basename(directory) == self.context:
                 for note in os.listdir(os.path.join(default_save_path, directory)):
+                    note_path = os.path.join(default_save_path, directory, note)
                     if os.path.isdir(os.path.join(default_save_path, directory, note)):
-                        self.notes.append(note)
+                        self.notes.append(note_path)
         for note in self.notes:
             note_button = customtkinter.CTkButton(self.main_frame, text=os.path.basename(note),
-                                    height=100, width=200, font=("Arial", 36))
-            note_button.pack(side="left", padx=20, pady=20)
+                                    height=100, width=200, font=("Arial", 36), command=lambda: self.open_note(note))
+            note_button.pack(side="left", padx=20, pady=20, anchor="nw")
             self.note_buttons.append(note_button)
 
+    def open_note(self, note):
+        os.startfile(note)
     def save_file(self, file_type):
         # Prepare """database"""
         if not os.path.exists(default_save_path):
