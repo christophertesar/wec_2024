@@ -59,7 +59,7 @@ python main.py
 
 ## Work Flow
 
-- Project rolled out using agile methodology with 2 sprints
+- Project rolled out using agile methodology with 3 sprints
     - 1st sprint was focused tkinter front end development, and backend development concurrently
     - 2nd sprint was focused on integration
     - 3rd sprint was focus on presentation/documentation concurrently
