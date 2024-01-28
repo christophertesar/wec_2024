@@ -8,6 +8,7 @@ from spire.doc import *
 from spire.doc.common import *
 
 from Backend.speech_text import transcribe_audio_to_text
+from Backend.speech_text import convert_text_to_speech
 from Backend.image_to_text import image_to_text
 from Backend.summary import gen_summary
 
@@ -141,7 +142,7 @@ class App(customtkinter.CTk):
             return
 
         # Open the custom save dialog to ask for a file name
-        save_dialog = SaveDialog(self, "New Note")
+        save_dialog = SaveDialog(self, "Note")
         user_defined_name = save_dialog.get_user_input()
         if not user_defined_name:
             messagebox.showinfo("Save File", "File save cancelled.")
@@ -157,7 +158,8 @@ class App(customtkinter.CTk):
             added_note = os.path.join(personal_save_path, user_defined_name)
         else:
             return
-        os.mkdir(added_note)
+        if not os.path.exists(added_note):
+            os.mkdir(added_note)
         added_file = os.path.join(added_note, os.path.basename(file))
         added_file_no_ext = os.path.splitext(os.path.basename(file))[0]
         shutil.copyfile(file, added_file)
@@ -168,11 +170,23 @@ class App(customtkinter.CTk):
             transcribed_file = os.path.join(added_note, added_file_no_ext + ".txt")
             transcribe_audio_to_text(added_file, transcribed_file)
             summary_file = os.path.join(added_note, added_file_no_ext + "_summary.txt")
-            gen_summary(transcribed_file, summary_file)
+            summary_tts_file = os.path.join(added_note, added_file_no_ext + "_summary_tts.mp3")
+            try:
+                gen_summary(transcribed_file, summary_file)
+            except:
+                gen_summary(transcribed_file, summary_file, 1)
+            convert_text_to_speech(summary_file, summary_tts_file)
         elif file_type == "image":
             transcribed_file = os.path.join(added_note, added_file_no_ext + "_ocr.txt")
             image_to_text(added_file, transcribed_file)
-        self.convert_text_to_doc(transcribed_file, document_file)
+        else:
+            self.change_context(self.context)
+            return
+        try:
+            self.convert_text_to_doc(transcribed_file, document_file)
+        except:
+            pass
+        self.change_context(self.context)
 
     def convert_text_to_doc(self, text_path, document_path):
         document = Document()
