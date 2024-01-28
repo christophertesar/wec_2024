@@ -55,3 +55,28 @@ To launch the WEC 2024 application, run the following command in the project dir
 
 ```sh
 python main.py
+```
+
+## Work Flow
+
+- Project rolled out using agile methodology with 2 sprints
+- 1st sprint was focused tkinter front end development, and backend development concurrently
+- 2nd sprint was focused on integration
+- 3rd sprint was focus on presentation/documentation concurrently
+
+## Future Improvements
+
+1. Cloud Storage
+2. Android/iOS App
+3. Events & Reminders
+4. In-app recordings & photos
+5. Asynchronous & Selective Processes
+6. Progress Bars
+
+## Sources
+
+* [pythonNLTK]([https://www.youtube.com/watch?v=A0gaXfM1UN0&list=PLQVvvaa0QuDclKx-QpC9wntnURXVJqLyk&index=2](https://buildmedia.readthedocs.org/media/pdf/nltk/latest/nltk.pdf))
+* [tkinter](https://customtkinter.tomschimansky.com/documentation/)
+* [AssemblyAI](https://www.assemblyai.com/docs/)
+* [TesseractOCR](https://pypi.org/project/pytesseract/)
+* [SpirePython](https://www.e-iceblue.com/Download/Spire-Doc-Python.html)
