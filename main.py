@@ -31,12 +31,10 @@ class App(customtkinter.CTk):
 
         # Sidebar frame
         self.sidebar_frame = customtkinter.CTkFrame(self, height=self.height, width=100, corner_radius=0)
-        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="WEC 2024",
+        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="Ez-Note",
                                                  font=customtkinter.CTkFont(size=20, weight="bold"))
         self.sidebar_frame.pack(side="left", fill="y")
 
-        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="WEC 2024",
-                                                 font=customtkinter.CTkFont(size=20, weight="bold"))
         self.work_button = customtkinter.CTkButton(self.sidebar_frame, text="Work",
                                                           height=100, font=("Arial", 36), command= lambda: self.change_context("work"))
         self.school_button = customtkinter.CTkButton(self.sidebar_frame, text="School",
