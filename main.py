@@ -1,8 +1,10 @@
 import os
 import shutil
 from tkinter import filedialog, messagebox
+from tkinter import *
 import customtkinter
 import sounddevice as sd
+from customtkinter import CTkImage
 from scipy.io.wavfile import write
 from spire.doc import *
 from spire.doc.common import *
@@ -69,20 +71,28 @@ class App(customtkinter.CTk):
         self.main_frame = customtkinter.CTkFrame(self, height=self.height - 30, width=self.width, corner_radius=0)
         self.main_frame.pack(side="right", fill="both", expand=True, padx=(20, 0), pady=0)
 
+        # Images
+        download_photo = PhotoImage(file=r"download.png")
+        process_photo = PhotoImage(file=r"transcribe.png")
+        transcribe_photo = PhotoImage(file=r"process.png")
+
         # Main Frame Buttons
         self.button_frame = customtkinter.CTkFrame(self.main_frame, height=100, width=self.width - 120, corner_radius=0)
-        upload_recording_button = customtkinter.CTkButton(self.button_frame, text="Upload Speech",
-                                                          height=100, width=200, font=("Arial", 36), command= lambda: self.save_file("audio"))
-        record_button = customtkinter.CTkButton(self.button_frame, text="Record Speech",
-                                                height=100, width=200, font=("Arial", 36), command=self.open_recording_dialog)
-        upload_photo_button = customtkinter.CTkButton(self.button_frame, text="Upload Photo",
-                                                      height=100, width=200, font=("Arial", 36), command= lambda: self.save_file("image"))
-        camera_button = customtkinter.CTkButton(self.button_frame, text="Take Photo",
-                                                height=100, width=200, font=("Arial", 36))
+        upload_recording_button = customtkinter.CTkButton(self.button_frame, text="Process Speech",
+                                                          height=100, width=200, font=("Arial", 36),
+                                                          command= lambda: self.save_file("audio"), image=process_photo)
+        record_button = customtkinter.CTkButton(self.button_frame, text="Upload File",
+                                                height=100, width=200, font=("Arial", 36),
+                                                command= lambda: self.save_file("other"), image=download_photo)
+        upload_photo_button = customtkinter.CTkButton(self.button_frame, text="Transcribe Speech",
+                                                      height=100, width=200, font=("Arial", 36),
+                                                      command= lambda: self.save_file("image"), image=transcribe_photo)
+        # camera_button = customtkinter.CTkButton(self.button_frame, text="Take Photo",
+        #                                         height=100, width=200, font=("Arial", 36))
 
         record_button.pack(side="left", padx=(10, 10), pady=10, fill="both")
         upload_recording_button.pack(side="left", padx=(0, 10), pady=10, fill="both")
-        camera_button.pack(side="left", padx=(0, 10), pady=10, fill="both")
+        # camera_button.pack(side="left", padx=(0, 10), pady=10, fill="both")
         upload_photo_button.pack(side="left", padx=(0, 20), pady=10, fill="both")
 
         # set default values
