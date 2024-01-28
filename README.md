@@ -60,9 +60,9 @@ python main.py
 ## Work Flow
 
 - Project rolled out using agile methodology with 2 sprints
-- 1st sprint was focused tkinter front end development, and backend development concurrently
-- 2nd sprint was focused on integration
-- 3rd sprint was focus on presentation/documentation concurrently
+    - 1st sprint was focused tkinter front end development, and backend development concurrently
+    - 2nd sprint was focused on integration
+    - 3rd sprint was focus on presentation/documentation concurrently
 
 ## Future Improvements
 
@@ -75,7 +75,7 @@ python main.py
 
 ## Sources
 
-* [pythonNLTK]([https://www.youtube.com/watch?v=A0gaXfM1UN0&list=PLQVvvaa0QuDclKx-QpC9wntnURXVJqLyk&index=2](https://buildmedia.readthedocs.org/media/pdf/nltk/latest/nltk.pdf))
+* [pythonNLTK](https://buildmedia.readthedocs.org/media/pdf/nltk/latest/nltk.pdf)
 * [tkinter](https://customtkinter.tomschimansky.com/documentation/)
 * [AssemblyAI](https://www.assemblyai.com/docs/)
 * [TesseractOCR](https://pypi.org/project/pytesseract/)
