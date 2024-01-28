@@ -24,7 +24,7 @@ class App(customtkinter.CTk):
         super().__init__()
 
         # Window Config
-        self.title("WEC 2024")
+        self.title("Ez-Note")
         self.update()
         self.width, self.height = self.winfo_screenwidth(), self.winfo_screenheight()
         self.geometry(f'{self.width}x{self.height}+0+0')
