@@ -29,10 +29,11 @@ class App(customtkinter.CTk):
         self.width, self.height = self.winfo_screenwidth(), self.winfo_screenheight()
         self.geometry(f'{self.width}x{self.height}+0+0')
 
+        ez_photo = PhotoImage(file=r"Eznote.png")
         # Sidebar frame
         self.sidebar_frame = customtkinter.CTkFrame(self, height=self.height, width=100, corner_radius=0)
-        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="Ez-Note",
-                                                 font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="",
+                                                 font=customtkinter.CTkFont(size=20, weight="bold"), image=ez_photo)
         self.sidebar_frame.pack(side="left", fill="y")
 
         self.work_button = customtkinter.CTkButton(self.sidebar_frame, text="Work",
