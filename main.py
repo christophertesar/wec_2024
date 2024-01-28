@@ -38,13 +38,12 @@ class App(customtkinter.CTk):
         self.geometry(f'{self.width}x{self.height}+0+0')
 
         # Define sidebar frame buttons and labels
+        ez_photo = PhotoImage(file=r"Eznote.png")
         self.sidebar_frame = customtkinter.CTkFrame(self, height=self.height, width=100, corner_radius=0)
-        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="WEC 2024",
-                                                 font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="",
+                                                 font=customtkinter.CTkFont(size=20, weight="bold"), image=ez_photo)
         self.sidebar_frame.pack(side="left", fill="y")
 
-        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="WEC 2024",
-                                                 font=customtkinter.CTkFont(size=20, weight="bold"))
         self.work_button = customtkinter.CTkButton(self.sidebar_frame, text="Work",
                                                    height=100, font=("Arial", 36),
                                                    command=lambda: self.change_context("work"))
